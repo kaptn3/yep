@@ -66,8 +66,12 @@
   };
 </script>
 
-<style>
-  .table tr {
-    cursor: pointer;
+<style lang="scss">
+  .bids {
+    padding: 20px 0;
+
+    tr {
+      cursor: pointer;
+    }
   }
 </style>
