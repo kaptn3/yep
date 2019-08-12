@@ -1,8 +1,5 @@
 <template>
   <div class="bids">
-    <h1 class="title is-2">
-      Заявки
-    </h1>
     <a-table
       :head="head"
       :body="body"
