@@ -1,19 +1,20 @@
 <template>
   <div class="offers">
-    <h1 class="title is-2">
-      Отправленные предложения
-    </h1>
     <b-table
       :data="body"
       :columns="head"
       :mobile-cards="true"
-      :row-class="(row, index) => this.colorTr(row.accept, row.canceled)"
+      :row-class="(row, index) => colorTr(row.accept, row.canceled)"
+      :loading="isLoading"
       class="offers__table"
     />
   </div>
 </template>
 
 <script>
+  import moment from 'moment';
+  import axios from 'axios';
+
   export default {
     name: 'Offers',
     data() {
@@ -45,7 +46,7 @@
           },
           {
             field: 'accept',
-            label: 'Предложение принято'
+            label: 'Принято'
           },
           {
             field: 'type',
@@ -60,61 +61,31 @@
             label: 'Дата отправки'
           }
         ],
-        body: [
-          {
-            'user_phone': '-',
-            'user_sex': 'M',
-            'user_date_of_birth': '1993-09-19',
-            'user_name': 'Максим',
-            'wish_date': '2019-08-19',
-            'wish': 'Тарм пам пам',
-            'accept': false,
-            'canceled': false,
-            'type': 0,
-            'short_desc': 'КРатко',
-            'sent_date': '2019-08-10T16:00:45.761702Z'
-          },
-          {
-            'user_phone': '-',
-            'user_sex': 'M',
-            'user_date_of_birth': '1993-09-19',
-            'user_name': 'Максим',
-            'wish_date': '2019-08-19',
-            'wish': 'Тарм пам пам',
-            'accept': false,
-            'canceled': true,
-            'type': 0,
-            'short_desc': 'КРатко',
-            'sent_date': '2019-08-10T16:00:45.761702Z'
-          },
-          {
-            'user_phone': '-',
-            'user_sex': 'M',
-            'user_date_of_birth': '1993-09-19',
-            'user_name': 'Максим',
-            'wish_date': '2019-08-19',
-            'wish': 'Тарм пам пам',
-            'accept': true,
-            'canceled': false,
-            'type': 0,
-            'short_desc': 'КРатко',
-            'sent_date': '2019-08-10T16:00:45.761702Z'
-          },
-          {
-            'user_phone': '-',
-            'user_sex': 'M',
-            'user_date_of_birth': '1993-09-19',
-            'user_name': 'Максим',
-            'wish_date': '2019-08-19',
-            'wish': 'Тарм пам пам',
-            'accept': false,
-            'canceled': false,
-            'type': 0,
-            'short_desc': 'КРатко',
-            'sent_date': '2019-08-10T16:00:45.761702Z'
-          }
-        ]
+        body: [],
+        isLoading: true
       };
+    },
+    mounted() {
+      const config = {
+        headers: {
+          'Authorization': `Token ${this.$store.state.token}`
+        }
+      };
+      const url = `${process.env.VUE_APP_API}managerBids/`;
+      axios.get(url, config)
+        .then((res) => {
+          const body = res.data.offers;
+          for (let i = 0; i < body.length; i++) {
+            body[i].user_sex = body[i].user_sex === 'M' ? 'Мужской' : 'Женский';
+            body[i].user_date_of_birth = moment(new Date(body[i].user_date_of_birth)).format('DD.MM.YYYY');
+            body[i].wish_date = moment(new Date(body[i].wish_date)).format('DD.MM.YYYY');
+            body[i].sent_date = moment(new Date(body[i].sent_date)).format('HH:mm, DD.MM.YYYY');
+            body[i].accept = body[i].accept ? '✔' : '';
+            body[i].type = body[i].type === 0 ? 'Подарок' : 'Скидка';
+          }
+          this.body = body;
+          this.isLoading = false;
+        });
     },
     methods: {
       colorTr(accept, canceled) {
@@ -154,10 +125,6 @@
 
         &:nth-child(6) {
           min-width: 150px;
-        }
-
-        &:nth-child(7) {
-          min-width: 205px;
         }
 
         &:nth-child(8) {

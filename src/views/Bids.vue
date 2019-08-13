@@ -3,12 +3,15 @@
     <a-table
       :head="head"
       :body="body"
+      :loading="isLoading"
       class="table"
     />
   </div>
 </template>
 
 <script>
+  import moment from 'moment';
+  import axios from 'axios';
   import ATable from '@/components/Table.vue';
 
   export default {
@@ -38,27 +41,29 @@
             label: 'Дата создания заявки'
           }
         ],
-        body: [
-          {
-            'bid_id': 1,
-            'user_sex': 'M',
-            'user_date_of_birth': '1993-09-19',
-            'user_name': 'Максим',
-            'wish_date': '2019-08-19',
-            'create_date': '2019-08-10T15:59:50.939105Z',
-            'wish': 'Тарм пам пам'
-          },
-          {
-            'bid_id': 3,
-            'user_sex': 'M',
-            'user_date_of_birth': '1993-09-19',
-            'user_name': 'Максим',
-            'wish_date': '2019-08-19',
-            'create_date': '2019-08-10T15:59:50.939105Z',
-            'wish': 'Тарм пам пам'
-          }
-        ]
+        body: [],
+        isLoading: true
       };
+    },
+    mounted() {
+      const config = {
+        headers: {
+          'Authorization': `Token ${this.$store.state.token}`
+        }
+      };
+      const url = `${process.env.VUE_APP_API}managerBids/`;
+      axios.get(url, config)
+        .then((res) => {
+          const body = res.data.bids;
+          for (let i = 0; i < body.length; i++) {
+            body[i].user_sex = body[i].user_sex === 'M' ? 'Мужской' : 'Женский';
+            body[i].user_date_of_birth = moment(new Date(body[i].user_date_of_birth)).format('DD.MM.YYYY');
+            body[i].wish_date = moment(new Date(body[i].wish_date)).format('DD.MM.YYYY');
+            body[i].create_date = moment(new Date(body[i].create_date)).format('HH:mm, DD.MM.YYYY');
+          }
+          this.body = body;
+          this.isLoading = false;
+        });
     }
   };
 </script>

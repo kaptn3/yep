@@ -4,7 +4,7 @@
       :data="body"
       :columns="head"
       :hoverable="true"
-      :loading="isLoading"
+      :loading="loading"
       :selected.sync="selected"
       :mobile-cards="true"
     />
@@ -30,12 +30,15 @@
       body: {
         type: Array,
         required: true
+      },
+      loading: {
+        type: Boolean,
+        default: false
       }
     },
     data() {
       return {
         isEmpty: false,
-        isLoading: false,
         selected: {},
         isModalActive: false
       };
