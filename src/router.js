@@ -18,12 +18,30 @@ export default new Router({
     {
       path: '/offers',
       name: 'offers',
-      component: Offers
+      component: Offers,
+      beforeEnter(to, from, next) {
+        if (localStorage.getItem('user-token')) {
+          next();
+        } else {
+          next('/');
+        }
+      }
     },
     {
       path: '/bids',
       name: 'bids',
-      component: Bids
+      component: Bids,
+      beforeEnter(to, from, next) {
+        if (localStorage.getItem('user-token')) {
+          next();
+        } else {
+          next('/');
+        }
+      }
+    },
+    {
+      path: '*',
+      redirect: '/'
     }
   ],
 });

@@ -7,7 +7,10 @@
         Yep!
       </b-navbar-item>
     </template>
-    <template slot="start">
+    <template
+      v-if="$store.state.token"
+      slot="start"
+    >
       <b-navbar-item
         tag="router-link"
         to="bids"
