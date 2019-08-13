@@ -25,18 +25,40 @@
     <template slot="end">
       <b-navbar-item tag="div">
         <div class="buttons">
-          <a class="button is-light">
+          <button
+            class="button is-light"
+            @click="logout"
+          >
             Выйти
-          </a>
+          </button>
         </div>
       </b-navbar-item>
     </template>
   </b-navbar>
 </template>
 
+<script>
+  export default {
+    name: 'Menu',
+    methods: {
+      logout() {
+        this.$store.commit('logout');
+        this.$router.push('/');
+      }
+    }
+  };
+</script>
+
+
 <style>
   .router-link-active {
     background-color: #6943d0;
     font-weight: 500;
+  }
+
+  @media screen and (max-width: 1023px) {
+    .navbar-menu {
+      background-color: #7957d5;
+    }
   }
 </style>
