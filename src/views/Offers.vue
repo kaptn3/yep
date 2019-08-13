@@ -7,7 +7,13 @@
       :row-class="(row, index) => colorTr(row.accept, row.canceled)"
       :loading="isLoading"
       class="offers__table"
-    />
+    >
+      <template slot="empty">
+        <section class="content has-text-grey has-text-centered">
+          <p>Данные не найдены</p>
+        </section>
+      </template>
+    </b-table>
   </div>
 </template>
 

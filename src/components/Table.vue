@@ -7,7 +7,13 @@
       :loading="loading"
       :selected.sync="selected"
       :mobile-cards="true"
-    />
+    >
+      <template slot="empty">
+        <section class="content has-text-grey has-text-centered">
+          <p>Данные не найдены</p>
+        </section>
+      </template>
+    </b-table>
     <b-modal
       :active.sync="isModalActive"
       :width="640"
@@ -38,7 +44,6 @@
     },
     data() {
       return {
-        isEmpty: false,
         selected: {},
         isModalActive: false
       };
