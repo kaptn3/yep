@@ -25,7 +25,10 @@
       </b-navbar-item>
     </template>
 
-    <template slot="end">
+    <template
+      v-if="$store.state.token"
+      slot="end"
+    >
       <b-navbar-item tag="div">
         <div class="buttons">
           <button
