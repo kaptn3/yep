@@ -11,9 +11,16 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [
     {
-      path: '/',
+      path: '/login',
       name: 'login',
-      component: Login
+      component: Login,
+      beforeEnter(to, from, next) {
+        if (localStorage.getItem('user-token')) {
+          next('/bids');
+        } else {
+          next();
+        }
+      }
     },
     {
       path: '/offers',
@@ -41,7 +48,7 @@ export default new Router({
     },
     {
       path: '*',
-      redirect: '/'
+      redirect: '/login'
     }
   ],
 });
